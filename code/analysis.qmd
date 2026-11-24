@@ -1,0 +1,59 @@
+---
+title: "Analysis"
+format: html
+---
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+theme_set(theme_light())
+library(readxl)
+library(brms)
+```
+
+```{r}
+#| label: bio
+
+bio <- read_excel("data/pnas.2100096118.sd02.xlsx", sheet = 2)
+```
+
+```{r}
+#| label: bio-count
+
+bio |> 
+  count(Language) |> 
+  arrange(-n)
+```
+
+```{r}
+#| label: bio-l1
+
+bio |> 
+  ggplot(aes(L1_BodyParts)) +
+  geom_bar()
+```
+
+```{r}
+#| label: bio-e2
+
+bio |> 
+  ggplot(aes(E2_PlantUse)) +
+  geom_bar()
+```
+
+```{r}
+#| label: bio-urb
+
+bio |> 
+  ggplot(aes(B1_Urbanization)) +
+  geom_bar()
+```
+
+```{r}
+#| label: bio-f
+
+bio_f <- bio |> 
+  drop_na(B1_Urbanization)
+```
+

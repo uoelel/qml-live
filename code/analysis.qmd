@@ -12,10 +12,15 @@ library(readxl)
 library(brms)
 ```
 
+## Data
+
 ```{r}
 #| label: bio
 
-bio <- read_excel("data/pnas.2100096118.sd02.xlsx", sheet = 2)
+bio <- read_excel("data/pnas.2100096118.sd02.xlsx", sheet = 2) |> 
+  mutate(
+    B1 = as.factor(B1_Urbanization)
+  )
 ```
 
 ```{r}
@@ -55,5 +60,31 @@ bio |>
 
 bio_f <- bio |> 
   drop_na(B1_Urbanization)
+```
+
+## Modelling
+
+```{r}
+#| label: bio-bm
+
+bio_bm <- brm(
+  E2_PlantUse ~ L1_BodyParts * B1,
+  family = gaussian,
+  data = bio_f,
+  seed = 5344,
+  cores = 4,
+  file = "data/cache/bio_bm"
+)
+```
+
+```{r}
+#| label: bio-bm-summary
+
+summary(bio_bm, prob = 0.8)
+```
+```{r}
+#| label: bio-trace
+
+plot(bio_bm)
 ```
 
